@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .inlineClass {
+            stroke: #006600;
+            fill: #ffccff;
+        }
+    </style>
+<script type="text/javascript">
+    function changeRect1() {
+        var widthString = String(Math.random()*400);
+
+        /*
+         * Read and set style
+         */
+        var rect1 = document.getElementById("rect1");
+        rect1.setAttribute("width", widthString);
+        console.info("rect1.style.stroke: ", rect1.style.stroke);
+        rect1.style.strokeWidth = String(Math.floor(Math.random()*30));
+
+        /*
+         * Event Listener
+         */
+        rect1.addEventListener("mouseover", function(evt){
+            console.info(rect1, evt, "mouseover");
+        });
+
+        /*
+         * Display the value
+         */
+        var rect1Span = document.getElementById("rect1Span");
+        rect1Span.innerHTML = widthString;
+    }
+
+    /*
+     * Global indicator
+     */
+    var circle1Interval = null;
+
+    /**
+     * Start move the circle
+     */
+    function startMove() {
+        var circle1 = document.getElementById('circle1');
+
+        if(circle1Interval == null) {
+            circle1Interval = setInterval(function(){
+                var cx = circle1.getAttribute("cx");
+                var newCx =parseInt(cx)+10;
+                newCx = newCx>400?100:newCx;
+                circle1.setAttribute("cx", String(newCx));
+            }, 200);
+        }
+    }
+
+    /*
+     * Stop move the circle
+     */
+    function stopMove() {
+        var circle1 = document.getElementById('circle1');
+        if(circle1Interval) {
+            clearInterval(circle1Interval);
+            circle1Interval = null;
+        }
+    }
+</script>
+</head>
+<body>
+<h1>What is SVG?</h1>
+<pre>
+    SVG stands for Scalable Vector Graphics
+    SVG is used to define vector-based graphics for the Web
+    SVG defines the graphics in XML format
+    SVG graphics do NOT lose any quality if they are zoomed or resized
+    Every element and every attribute in SVG files can be animated
+    SVG is a W3C recommendation
+    SVG integrates with other W3C standards such as the DOM and XSL
+</pre>
+<h1>Animation</h1>
+<pre>
+    Animation is done by manipulating the attributes of shapes over time. This is done using one or more of the 5 SVG animation elements:
+    set
+    animate
+    animateColor
+    animateTransform
+    animateMotion
+</pre>
+<pre>
+    Time Unit	Description
+        h	Hours
+        min	Minutes
+        s	Seconds
+        ms	Milliseconds
+    hh:mm:ss
+</pre>
+<div>
+    <h2>Example</h2>
+    <svg>
+        <rect x="20" y="20" width="100" height="100"
+              style="stroke: gray; stroke-width: 5; fill: green;">
+            <animateTransform
+                attributeName="transform"
+                begin="0s"
+                dur="20s"
+                type="rotate"
+                from="0 60 60"
+                to="360 60 60"
+                repeatCount="indefinite"></animateTransform>
+        </rect>
+    </svg>
+    <h2>set - change attribute at time point</h2>
+    <pre>
+        attributeType = XML | CSS
+    </pre>
+    <svg>
+        <circle cx="50" cy="50" r="25"
+                style="stroke: gray; stroke-width: 5; fill: green;">
+           <set attributeName="r"
+                attributeType="XML"
+                to="100"
+                begin="3s"></set>
+        </circle>
+    </svg>
+    <h2>animate - change attribute, time span</h2>
+    <pre>
+        fill = remove | freeze
+        repeatCount = indefinite | none
+    </pre>
+    <svg>
+        <circle cx="20" cy="50" r="20"
+                style="stroke: red; fill: green;">
+            <animate attributeName="cx"
+                     attributeType="XML"
+                     from="30" to="200"
+                     begin="0s" dur="2s"
+                     fill="freeze"
+                     repeatCount="indefinite"></animate>
+        </circle>
+    </svg>
+    <h2>animateColor - change color attribute, time span</h2>
+    <svg>
+        <circle cx="50" cy="50" r="45"
+                style="stroke: green; fill: gray;">
+            <animateColor attributeName="fill"
+                          from="#ff0000" to="#00ff00"
+                          begin="0s" dur="3s"
+                          fill="freeze"
+                          repeatCount="indefinite"></animateColor>
+        </circle>
+    </svg>
+    <h2>animateTransform - rotate, translate, skew, scale, matrix</h2>
+    <svg>
+        <rect x="50" y="50" width="80" height="90"
+              style="stroke: gray; fill: green">
+            <animateTransform attributeName="transform"
+                              type="rotate"
+                              from="0 60 60" to="360 70 70"
+                              begin="0s" dur="3s"
+                              repeatCount="indefinite"></animateTransform>
+        </rect>
+    </svg>
+    <svg height="300">
+        <rect x="50" y="10" width="80" height="90"
+              style="stroke: gray; fill: green">
+            <animateTransform attributeName="transform"
+                              type="scale"
+                              from="1 1" to="2 3"
+                              begin="0s" dur="3s"
+                              repeatCount="indefinite"></animateTransform>
+        </rect>
+    </svg>
+</div>
+<h1>Transformation</h1>
+<pre>
+SVG provides four transformation functions:
+    translate()
+    rotate()
+    scale()
+    skew()
+    matrix()
+</pre>
+<div>
+    <h2>Example</h2>
+    <svg>
+        <rect x="50" y="0" height="90" width="90"
+              style="stroke: #ff0000; fill: #ccccff"
+              transform="translate(30) rotate(45 50 50)"></rect>
+        <text x="45" y="70"
+              transform="translate(45) rotate(30 60 60)">Hello SVG</text>
+    </svg>
+    <h2>Translate - Move Item Relatively</h2>
+    <svg>
+        <rect x="20" y="20" width="50" height="50"
+              style="fill:red;"></rect>
+        <rect x="20" y="20" width="50" height="50"
+              style="fill:blue;"
+              transform="translate(60, 30)"></rect>
+    </svg>
+    <h2>Rotate - Rotate from 0,0 or Rotate from given X, Y</h2>
+    <svg>
+        <rect x="60" y="20" width="50" height="50"
+              style="fill:none; stroke: red; "></rect>
+        <rect x="60" y="20" width="50" height="50"
+              style="fill:blue;"
+              transform="rotate(25, 60, 20)"></rect>
+        <rect x="60" y="20" width="50" height="50"
+              style="fill:red;"
+              transform="rotate(-115, 110, 20)"></rect>
+        <rect x="60" y="20" width="50" height="50"
+              style="fill: none; stroke: purple"
+              transform="rotate(20, 85, 45)"></rect>
+    </svg>
+    <h2>Scale - Scale the Size and Position (scaleNumber) or (xScaleNumber, yScaleNumber)</h2>
+    <svg>
+        <rect x="20" y="20" width="50" height="50"
+              style="fill:none; stroke:gray;"></rect>
+        <rect x="20" y="20" width="50" height="50"
+              style="fill:none; stroke:blue;"
+              transform="scale(2)"></rect>
+        <rect x="20" y="20" width="50" height="50"
+              style="fill:none; stroke:red;"
+              transform="scale(3, 1.5)"></rect>
+    </svg>
+    <h2>Scale - Mirror</h2>
+    <svg>
+        <path d="M20,20 l20,20 l0,20 l-20,20 Z"
+              style="stroke: red; fill:none"></path>
+
+        <path d="M20,20 l20,20 l0,20 l-20,20 Z"
+              style="stroke: blue; fill:none"
+              transform="translate(100, 0) scale(-1, 1)"></path>
+    </svg>
+    <h2>Skew - skewX, skewY(relative to 0, 0)</h2>
+    <svg width="600" height="200">
+        <rect x="10" y="10" width="30" height="40"
+              style="stroke: gray; fill:none"></rect>
+        <rect x="50" y="10" width="30" height="40"
+              style="stroke: gray; fill:none"
+                transform="skewX(10)"></rect>
+        <rect x="110" y="10" width="30" height="40"
+              style="stroke: purple; fill:none"
+                transform="skewX(45)"></rect>
+        <rect x="170" y="10" width="30" height="40"
+              style="stroke: black; fill:none"
+                transform="skewX(60)"></rect>
+        <rect x="10" y="10" width="30" height="40"
+              style="stroke: blue; fill:none"
+              transform="skewY(10)"></rect>
+        <rect x="20" y="10" width="30" height="40"
+              style="stroke: red; fill:none"
+              transform="skewY(45)"></rect>
+        <rect x="30" y="10" width="30" height="40"
+              style="stroke: green; fill:none"
+              transform="skewY(60)"></rect>
+    </svg>
+    <h2>Matrix</h2>
+    <pre>
+    a  c  e
+    b  d  f
+    0  0  1
+    transform="matrix(a,b,c,d,e,f)"
+
+    Translate
+        1  0  tx
+        0  1  ty
+        0  0   1
+        matrix(1,0,0,1,tx,ty)
+
+    Rotate
+        cos(a)   -sin(a)  0
+        sin(a)    cos(a)  0
+             0        0   1
+        matrix( cos(a), sin(a),-sin(a),cos(a),0,0 )
+
+    Scale
+        sx  0  0
+         0 sy  0
+         0  0  1
+        matrix(sx,0,0,sy,0,0)
+
+   Skew
+        1  tan(a)  0
+        0       1  0
+        0       0  1
+        matrix(1,0,tan(a),1,0,0)
+    </pre>
+    <svg>
+        <circle cx="50" cy="50" r="45"
+                style="fill:gray; stroke:blue;"></circle>
+        <circle cx="50" cy="50" r="45"
+                style="fill:green; stroke:red;"
+                transform="matrix(1,0,0,1,100,30)"></circle>
+    </svg>
+    <h2>The Sequence of Transformations Matter</h2>
+    <svg>
+        <rect x="20" y="20" width="70" height="50"
+                style="fill:gray; stroke:blue;"></rect>
+        <rect x="20" y="20" width="70" height="50"
+              style="fill:green; stroke:blue;"
+                transform="rotate(20) translate(100, 20)"></rect>
+        <rect x="20" y="20" width="70" height="50"
+              style="fill:red; stroke:blue;"
+                transform="translate(100, 20) rotate(20)"></rect>
+    </svg>
+</div>
+
+<h1>External Style Sheet</h1>
+<div>
+    <link rel="stylesheet" href="css/1.first_svg.css" />
+    <svg>
+        <circle class="orange" cx="100" cy="50" r="40"></circle>
+    </svg>
+</div>
+<h1>Inline Style Sheet</h1>
+<div>
+    <svg>
+        <style type="text/css">
+            circle {
+                stroke: #006600;
+                fill: #00cc00;
+            }
+        </style>
+        <circle cx="40" cy="40" r="24"></circle>
+    </svg>
+    <svg>
+        <style type="text/css">
+            circle.red {
+                stroke: #ff6600;
+                fill: #ffcc00;
+            }
+            circle.blue {
+                stroke: #0066ff;
+                fill: #00ccff;
+            }
+        </style>
+        <circle class="red" cx="40" cy="40" r="24"></circle>
+        <circle class="blue" cx="90" cy="40" r="24"></circle>
+    </svg>
+    <svg>
+        <circle class="inlineClass" cx="40" cy="40" r="24"></circle>
+    </svg>
+</div>
+<h1>JavaScript Animation</h1>
+<div>
+    <svg width="500" height="200">
+        <circle id="circle1" cx="100" cy="100" r="90" style="stroke:green; stroke-width:5; fill:purple"></circle>
+    </svg>
+</div>
+<div>
+    <input type="button" id="startBt" value="Start" onclick="startMove();" />
+    <input type="button" id="stopBt" value="Stop" onclick="stopMove();"/>
+</div>
+<h1>JavaScript</h1>
+<div>
+    <svg width="500" height="200">
+        <rect id="rect1" x="10" y="10" width="100" height="150" style="stroke: purple; stroke-width: 5;"
+                onmouseover="this.style.stroke='#0ff'; this.style.strokeWidth='15'"
+                onmouseout="this.style.stroke='#f00'; this.style.strokeWidth='5'"></rect>
+    </svg>
+    <span id="rect1Span"></span>
+    <input type="button" id="rect1Bt" value="Change width" onclick="changeRect1();" />
+</div>
+<h1>radialGradient</h1>
+<div>
+    <svg height="150" width="300">
+        <defs>
+            <radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                <stop offset="0%" style="stop-color: rgb(255,255,255); stop-opacity: 0;" />
+                <stop offset="100%" style="stop-color: rgb(255,0,0); stop-opacity: 1;" />
+            </radialGradient>
+        </defs>
+
+        <ellipse cx="150" cy="75" rx="150" ry="75" fill="url(#grad1)" />
+    </svg>
+    <svg height="150" width="300">
+        <defs>
+            <radialGradient id="grad1" cx="20%" cy="30%" r="50%" fx="50%" fy="50%">
+                <stop offset="0%" style="stop-color: rgb(255,255,255); stop-opacity: 0;" />
+                <stop offset="100%" style="stop-color: rgb(255,0,0); stop-opacity: 1;" />
+            </radialGradient>
+        </defs>
+
+        <ellipse cx="150" cy="75" rx="150" ry="75" fill="url(#grad1)" />
+    </svg>
+</div>
+<h1>linearGradient</h1>
+<pre>
+The linearGradient element is used to define a linear gradient.
+
+The linearGradient element must be nested within a defs tag. The defs tag is short for definitions and contains definition of special elements (such as gradients).
+
+    Linear gradients can be defined as horizontal, vertical or angular gradients:
+
+    Horizontal gradients are created when y1 and y2 are equal and x1 and x2 differ
+    Vertical gradients are created when x1 and x2 are equal and y1 and y2 differ
+    Angular gradients are created when x1 and x2 differ and y1 and y2 differ
+</pre>
+<div>
+    <svg height="150" width="400">
+        <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1;" />
+                <stop offset="100%" style="stop-color:rgb(255,0,0);stor-opacity:1;" />
+            </linearGradient>
+        </defs>
+        <ellipse cx="200" cy="70" rx="90" ry="55" fill="url(#grad1)" />
+    </svg>
+    <svg height="150" width="400">
+        <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1;" />
+                <stop offset="100%" style="stop-color:rgb(255,0,0);stor-opacity:0.5;" />
+            </linearGradient>
+        </defs>
+        <ellipse cx="200" cy="70" rx="90" ry="55" fill="url(#grad1)" />
+    </svg>
+    <svg height="150" width="400">
+        <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="30%" style="stop-color:rgb(255,255,0);stop-opacity:1;" />
+                <stop offset="70%" style="stop-color:rgb(255,0,0);stor-opacity:0.5;" />
+            </linearGradient>
+        </defs>
+        <ellipse cx="200" cy="70" rx="90" ry="55" fill="url(#grad1)" />
+        <text fill="#ffffff" font-size="45" font-family="Verdana" x="150" y="86">SVG</text>
+    </svg>
+</div>
+<h1>Filter</h1>
+<pre>
+The available filters in SVG are:
+
+    feBlend - filter for combining images
+    feColorMatrix - filter for color transforms
+    feComponentTransfer
+    feComposite
+    feConvolveMatrix
+    feDiffuseLighting
+    feDisplacementMap
+    feFlood
+    feGaussianBlur
+    feImage
+    feMerge
+    feMorphology
+    feOffset - filter for drop shadows
+    feSpecularLighting
+    feTile
+    feTurbulence
+    feDistantLight - filter for lighting
+    fePointLight - filter for lighting
+    feSpotLight - filter for lighting
+</pre>
+<div>
+    <svg width="110" height="110">
+        <defs>
+            <filter id="f1" x="0" y="0">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="15"></feGaussianBlur>
+            </filter>
+        </defs>
+        <rect width="90" height="90" stroke="green" stroke-width="3" fill="yellow" filter="url(#f1)"></rect>
+    </svg>
+    <svg width="120" height="120">
+        <defs>
+            <filter id="f2" x="0" y="0" width="200%" height="200%">
+                <feOffset result="offOut" in="SourceGraphic" dx="20" dy="20"></feOffset>
+                <feBlend in="SourceGraphic" in2="offOut" mode="normal"></feBlend>
+            </filter>
+        </defs>
+        <rect width="90" height="90" stroke="green" stroke-width="5" fill="yellow" filter="url(#f2)"></rect>
+    </svg>
+    <svg width="120" height="120">
+        <defs>
+            <filter id="f3" x="0" y="0" width="200%" height="200%">
+                <feOffset result="offOut" in="SourceGraphic" dx="20" dy="20"></feOffset>
+                <feGaussianBlur in="SourceGraphic" result="blurOut" stdDeviation="10"></feGaussianBlur>
+                <feBlend in="SourceGraphic" in2="blurOut" mode="normal"></feBlend>
+
+            </filter>
+        </defs>
+        <rect width="90" height="90" stroke="green" stroke-width="5" fill="yellow" filter="url(#f3)"></rect>
+    </svg>
+    <svg width="140" height="140">
+        <defs>
+            <filter id="f4" x="0" y="0" width="200%" height="200%">
+                <feOffset result="offOut" in="SourceAlpha" dx="20" dy="20"></feOffset>
+                <feGaussianBlur in="offOut" result="blurOut" stdDeviation="10"></feGaussianBlur>
+                <feBlend in="SourceGraphic" in2="blurOut" mode="normal"></feBlend>
+            </filter>
+        </defs>
+        <rect width="90" height="90" stroke="green" stroke-width="3" fill="yellow" filter="url(#f4)"></rect>
+    </svg>
+    <svg width="140" height="140">
+        <defs>
+            <filter id="f5" x="0" y="0" width="200%" height="200%">
+                <feOffset result="offOut" in="SourceAlpha" dx="20" dy="20"></feOffset>
+                <feColorMatrix result="matrixOut" in="offOut" type="matrix" values="0.2 0 0 0 0 0 0.2 0 0 0 0 0 0.2 0 0 0 0 0 1 0" ></feColorMatrix>
+                <feGaussianBlur result="blurOut" in="matrixOut" stdDeviation="10"></feGaussianBlur>
+                <feBlend in="SourceGraphic" in2="blurOut" mode="normal"></feBlend>
+            </filter>
+        </defs>
+        <rect width="90" height="90" stroke="green" stroke-width="5" fill="yellow" filter="url(#f5)"></rect>
+    </svg>
+</div>
+<h1>Stroke</h1>
+<div>
+    <svg height="80" width="300">
+        <g fill="none">
+            <path stroke="blue" d="M5 20 l 215 0" ></path>
+            <path stroke="red" d="M5 40 l 215 0" ></path>
+            <path stroke="green" d="M5 60 l 215 0" ></path>
+        </g>
+    </svg>
+    <svg width="300" height="80">
+        <g fill="none">
+            <path stroke="blue" d="M5 20 l 215 0" stroke-width="2" ></path>
+            <path stroke="red" d="M5 40 l 215 0" stroke-width="6" ></path>
+            <path stroke="green" d="M5 60 l 215 0" stroke-width="10" ></path>
+        </g>
+    </svg>
+    <svg width="300" height="80">
+        <g fill="none">
+            <path stroke="blue" d="M5 20 l 215 0" stroke-width="2" stroke-dasharray="5,5" ></path>
+            <path stroke="red" d="M5 40 l 215 0" stroke-width="6" stroke-dasharray="10,10"></path>
+            <path stroke="green" d="M5 60 l 215 0" stroke-width="10" stroke-dasharray="20,10,5,5,10,20"></path>
+        </g>
+    </svg>
+</div>
+<h1>Text</h1>
+<div>
+    <svg width="200" height="30">
+        <text x="0" y="15" fill="red" stroke="none">I love this game!</text>
+    </svg>
+    <svg width="200" height="100">
+        <text x="0" y="15" fill="red" stroke="none" transform="rotate(30 20,40)">I love this game!</text>
+    </svg>
+    <svg width="200" height="90">
+        <text x="0" y="20" style="fill:red">
+            1st Line
+            <tspan x="10" y="45">2nd Line</tspan>
+            <tspan x="10" y="65">3rd Line</tspan>
+        </text>
+    </svg>
+    <svg width="200" height="30">
+        <a xlink:href="http://www.sitepoint.com" target="_blank">
+            <text x="0" y="15" fill="blue">I love this game!</text>
+        </a>
+    </svg>
+</div>
+<svg width="200" height="200">
+    <circle cx="100" cy="100" r="70" stroke="red" stroke-width="5" fill="green"></circle>
+    Sorry, your browser doesn't support SVG.
+</svg>
+<h1>Path</h1>
+<div>
+    <pre>
+    The following commands are available for path data:
+        M = moveto
+        L = lineto
+        H = horizontal lineto
+        V = vertical lineto
+        C = curveto
+        S = smooth curveto
+        Q = quadratic Bézier curve
+        T = smooth quadratic Bézier curveto
+        A = elliptical Arc
+        Z = closepath
+    Note: All of the commands above can also be expressed with lower letters. Capital letters means absolutely positioned, lower cases means relatively positioned.
+    </pre>
+    <svg width="250" height="210">
+        <path d="M150 0 L75 200 L225 200 Z"></path>
+    </svg>
+    <svg height="400" width="450">
+        <path id="lineAB" d="M100 350 l150 -300 Z" stroke="red" stroke-width="3" fill="none"></path>
+        <path id="lineBC" d="M250 50 l150 300 Z" stroke="red" stroke-width="3" fill="none"></path>
+        <path d="M 175 200 l 150 0" stroke="green" stroke-width="3" fill="none"></path>
+        <path d="M 100 350 q 150 -300 300 0" stroke="blue" stroke-width="5" fill="none"></path>
+
+        <g stroke="black" stroke-width="3" fill="white">
+            <circle cx="100" cy="350" r="3" ></circle>
+            <circle cx="250" cy="50" r="3" ></circle>
+            <circle cx="400" cy="350" r="3" ></circle>
+        </g>
+
+        <g font-size="30" font="sans-serif" fill="blue" stroke="none">
+            <text x="100" y="350" dx="-30">A</text>
+            <text x="250" y="50" dy="-15" dx="-10">B</text>
+            <text x="400" y="350" dx="10">C</text>
+        </g>
+    </svg>
+</div>
+<h1>PolyLine</h1>
+<div>
+    <svg height="200" width="700">
+        <polyline points="0,0 50,70 120,40 200,75 500,175 600,25" style="fill: none; stroke: purple; stroke-width: 5;"></polyline>
+    </svg>
+    <svg height="180" width="500">
+        <polyline points="0,40 40,40 40,80 80,80 80,120 120,120 120,160" style="fill:green; stroke: red; stroke-width: 10;"></polyline>
+    </svg>
+</div>
+<h1>Line</h1>
+<div>
+    <svg width="600" height="200">
+        <line x1="0" y1="0" x2="600" y2="200" stroke="blue" stroke-width="5"></line>
+    </svg>
+</div>
+<h1>Ellipse</h1>
+<div>
+    <svg height="200" width="500">
+        <ellipse cx="200" cy="100" rx="200" ry="80" style="fill:yellow; stroke:purple; stroke-width: 2"></ellipse>
+    </svg>
+    <svg height="200" width="400">
+        <ellipse cx="200" cy="100" rx="100" ry="40" style="fill:purple"></ellipse>
+        <ellipse cx="200" cy="90" rx="90" ry="35" style="fill:green"></ellipse>
+        <ellipse cx="200" cy="80" rx="80" ry="20" style="fill:yellow"></ellipse>
+    </svg>
+</div>
+<h1>Polygon</h1>
+<div>
+    <svg width="600" height="200">
+        <polygon points="100,25 500,75, 300,180" style="fill:lime; stroke: purple; stroke-width: 2"></polygon>
+    </svg>
+    <svg width="600" height="200">
+        <polygon points="100,25 500,75, 300,180, 50,10, 400,200" style="fill:lime; stroke: purple; stroke-width: 2"></polygon>
+    </svg>
+    <svg width="210" height="210">
+        <polygon points="100,10 40,198 190,78 10,78 160,198"  style="fill:lime; stroke: purple; stroke-width: 5; fill-rule:nonzero;">
+        </polygon>
+    </svg>
+    <svg width="210" height="210">
+        <polygon points="100,10 40,198 190,78 10,78 160,198" style="fill:lime; stroke:purple; stroke-width: 5; fill-rule: evenodd;">
+        </polygon>
+    </svg>
+</div>
+<h1>Circle</h1>
+<div>
+    <svg height="200" width="200">
+        <circle cx="100" cy="100" r="80" fill="blue" stroke="red" stroke-width="10"></circle>
+    </svg>
+</div>
+<h1>Rectangle</h1>
+<div>
+    <svg width="400" height="100">
+        <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(255,0,0);"></rect>
+    </svg>
+    <svg width="400" height="180">
+        <rect x="50" y="20" width="150" height="150" style="fill:rgb(0,0,255);stroke-width:5;stroke:rgb(255,0,0); fill-opacity:0.2; stroke-opacity:0.5"></rect>
+    </svg>
+    <svg width="300" height="180">
+        <rect x="50" y="20" width="150" height="150" style="fill:rgb(0,0,255);stroke-width:5;stroke:rgb(255,0,0); opacity: 0.3"></rect>
+    </svg>
+    <svg width="300" height="180">
+        <rect rx="20" ry="20" x="50" y="20" width="150" height="150" style="fill:rgb(0,0,255);stroke-width:5;stroke:rgb(255,0,0); opacity: 0.3"></rect>
+    </svg>
+</div>
+
+<h1>Shape CSS properties</h1>
+<pre>
+CSS properties for the path element and other shape elements:
+
+<%-- --%>
+CSS Property	Description
+fill	Sets fill color of the shape.
+fill-opacity	Sets fill opacity of the shape.
+fill-rule	Sets fill rule of the shape.
+marker	Sets marker used along the lines (edges) of this shape.
+marker-start	Sets start marker used along the lines (edges) of this shape.
+marker-mid	Sets mid marker used along the lines (edges) of this shape.
+marker-end	Sets end marker used along the lines (edges) of this shape.
+stroke	Sets the stroke (line) color used to draw the outline of this shape.
+stroke-dasharray	Sets the stroke (line) dashing used to draw the outline of this shape.
+stroke-dashoffset	Sets the stroke (line) dash offset used to draw the outline of this shape.
+stroke-linecap	Sets the stroke (line) line cap used to draw the outline of this shape. Valid values are round, butt and square.
+stroke-miterlimit	Sets the stroke (line) miter limit used to draw the outline of this shape.
+stroke-opacity	Sets the stroke (line) opacity used to draw the outline of this shape.
+stroke-width	Sets the stroke (line) width used to draw the outline of this shape.
+text-rendering	Sets the text-rendering used to draw the outline of this shape.
+</pre>
+<h1>Text CSS properties</h1>
+<pre>
+    CSS properties for the text element:
+
+CSS Property	Description
+alignment-baseline	Sets how the text is aligned to its x and y coordinates.
+baseline-shift	Sets the baseline shift used to render text.
+dominant-baseline	Sets the dominant baseline.
+glyph-orientation-horizontal	Sets horizontal glyph orientation.
+glyph-orientation-vertical	Sets vertical glyph orientation.
+kerning	Sets the kerning of the rendered text (kerning is letter spacing).
+
+</pre>
+<h1>Gradient CSS properties</h1>
+<pre>
+    CSS properties for the SVG gradients:
+
+CSS Property	Description
+stop-color	Sets the stop color used in a stop element used in a gradient.
+stop-opacity	Sets the stop opacity used in a stop element used in a gradient.
+</pre>
+
+</body>
+</html>
